@@ -14,7 +14,9 @@ admin_id=7645264588
 api = '7850708922:AAEixcaYYihQLTQ96NImAXZlVKN1pbB6W6M'
 bot = Bot(api)
 dp=Dispatcher()
-
+class addReklama(StatesGroup):
+    Photo=State()
+    text=State()
 async def main():
     await dp.start_polling(bot)
 @dp.message(Command('start'))
@@ -55,6 +57,28 @@ async def save(sms:types.Message,state:FSMContext):
             chat_id=i[0],
             photo='https://uzum.uz/ru/product/gazirovannyj-napitok-pepsi-05-l-24-1865534?skuId=6549586&srsltid=AfmBOopvaG-PXgZWFk9yGOII8xPhjLJQT46Rtv3qf2cOk4sKf2_glunY',
             caption='Cola Pepsi Sprite'
+        )
+@dp.message(F.text=='Reklama')
+async def Reklama(sms:types.Message,state:FSMContext):
+    if sms.from_user.id==admin_id:
+        await sms.answer('birinshi textti jazin!')
+        await state.set_state(addReklama.text)
+@dp.message(addReklama.text)
+async def Photo(sms:types.Message,state:FSMContext):
+    await state.update_data(jaziw=sms.text)
+    await sms.answer("endi suwretti jiberin!")
+    await state.set_state(addReklama.Photo)
+@dp.message(addReklama.Photo)
+async def send_Reklama(sms:types.Message,state:FSMContext):
+    await state.update_data(foto=sms.photo[-1].file_id)
+    datas=await state.get_data()
+    await state.clear()
+    a=await show_users()
+    for i in a:
+        await bot.send_photo(
+            chat_id=i[0],
+            caption=datas['jaziw'],
+            photo=datas['foto'],
         )
 if __name__=='__main__':
     logging.basicConfig(level=logging.INFO)
