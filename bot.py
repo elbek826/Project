@@ -49,6 +49,13 @@ async def save(sms:types.Message,state:FSMContext):
         phone=datas['nomer'],
         address=datas['address']
     )
+    a=await show_users()
+    for i in a:
+        await bot.send_photo(
+            chat_id=i[0],
+            photo='https://uzum.uz/ru/product/gazirovannyj-napitok-pepsi-05-l-24-1865534?skuId=6549586&srsltid=AfmBOopvaG-PXgZWFk9yGOII8xPhjLJQT46Rtv3qf2cOk4sKf2_glunY',
+            caption='Cola Pepsi Sprite'
+        )
 if __name__=='__main__':
     logging.basicConfig(level=logging.INFO)
     asyncio.run(main())

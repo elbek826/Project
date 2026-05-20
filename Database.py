@@ -17,5 +17,7 @@ INSERT INTO users(id,name,phone,address)
     db.commit()
 async def show_users():
     cursor.execute('''
-SELECT * FROM users
+SELECT id FROM users
                    ''')
+    a=cursor.fetchall()
+    return a
